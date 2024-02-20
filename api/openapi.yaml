@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  version: '0.0.0'
+  title: 'SDN Service API'
+servers:
+  - url: 'http://localhost:8080'
+    description: 'Development Server'
+paths:
+  /update:
+    post:
+      summary: 'Start data upload'
+      operationId: Update
+      responses:
+        'XXX':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Common'
+      security: [ ]
+  /state:
+    get:
+      summary: 'Get Application state'
+      operationId: GetState
+      responses:
+        '2XX':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+      security: [ ]
+  /get_names:
+    get:
+      summary: 'Search names in database'
+      operationId: SearchNames
+      parameters:
+        - name: 'name'
+          in: query
+          schema:
+            type: string
+        - name: 'type'
+          in: query
+          schema:
+            type: string
+            enum:
+              - strong
+              - weak
+            default: weak
+      responses:
+        '2XX':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryCollection'
+        '4XX':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Common'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Common'
+      security: [ ]
+components:
+  schemas:
+    Common:
+      type: object
+      required:
+        - result
+        - info
+        - code
+      properties:
+        id:
+          readOnly: true
+          type: boolean
+        info:
+          readOnly: true
+          type: string
+        code:
+          readOnly: true
+          type: integer
+    State:
+      type: object
+      required:
+        - result
+        - info
+      properties:
+        id:
+          readOnly: true
+          type: boolean
+        info:
+          readOnly: true
+          type: string
+          enum:
+            - empty
+            - updating
+            - ok
+    Entry:
+      readOnly: true
+      type: object
+      required:
+        - uid
+        - first_name
+        - last_name
+      properties:
+        uid:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+    EntryCollection:
+      readOnly: true
+      type: array
+      items:
+        $ref: '#/components/schemas/Entry'
